@@ -2,6 +2,7 @@ from flask import Flask, render_template, request
 from pymongo import MongoClient
 from data_processing import *
 from geopy.geocoders import Nominatim
+from datetime import datetime 
 
 app = Flask(__name__)
 
@@ -13,34 +14,22 @@ station_information = db['station_information']
 
 @app.route('/submit', methods=['POST'])
 def submit():
-    address = request.form['location']
-    geolocator = Nominatim(user_agent="bigDataProject")
-    location = geolocator.geocode(address)
-    if location:
-        coordinates = (location.latitude, location.longitude)
-        print(coordinates)
-        return True
-    else:
-        return False
-    #     return f"Coordinates for '{address}': {coordinates}"
-    # else:
-    #     return "Location not found. Please enter a valid address."
+    start = request.form['starting_location']
+    end = request.form['end_location']
+    # Instantiate a new Nominatim client
+    app = Nominatim(user_agent="tutorial")
+    start_location = app.geocode(start).raw
+    end_location = app.geocode(end).raw
+    start_station =  get_priority_score(find_station_status(find_nearest_stations(float(start_location['lat']), float(start_location['lon'])), "B"), "B")
+    stop_station =   get_priority_score(find_station_status(find_nearest_stations(float(end_location['lat']) , float(end_location['lon'])), "E"), "E")
+    return render_template('map.html', start_location= [float(start_location['lat']), float(start_location['lon'])], 
+                           end_location=[float(end_location['lat']) , float(end_location['lon'])], start_stations = start_station, stop_stations = stop_station)
 
 
 @app.route('/')
 def index():
-
-    start_lat = 40.703661705241345 
-    start_lon = -74.0131813287735
-
-    stop_lat = 40.71907891179564
-    stop_lon = -73.94223690032959
-
-    start_station = find_station_status(find_nearest_stations(start_lat, start_lon), "B")
-    stop_station = find_station_status(find_nearest_stations(stop_lat, stop_lon), "E")
-
     # Example coordinates: List of (latitude, longitude) tuples
-    return render_template('index.html', start_stations = start_station, stop_stations = stop_station)
+    return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

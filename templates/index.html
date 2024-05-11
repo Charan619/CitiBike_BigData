@@ -2,46 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Map Display</title>
+    <title>Bikenomic</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <style>
-        #map { height: 400px; }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        #map {
+            height: 400px;
+        }
+        center {
+            margin-top: 20px;
+        }
+        h1 {
+            color: #444;
+        }
+        form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #5c67f2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #4a54e1;
+        }
     </style>
 </head>
 <body>
     
-    <h1>Enter Location</h1>
-    <form action="/submit" method="post">
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location" required>
-        <button type="submit">Convert</button>
-    </form>
+    
+    <center>
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Bikenomic Logo" style="max-width: 200px;" onerror="this.onerror=null; this.innerHTML='Logo not available'">    
+        <h1>Bikenomic - Citibike Location Finder</h1>
+        <form action="/submit" method="post">
+            <label for="starting_location">Start Location:</label>
+            <input type="text" id="starting_location" name="starting_location" required>
+            <br>
+            <label for="end_location">End Location:</label>
+            <input type="text" id="end_location" name="end_location" required>
+            <br>
+            <button type="submit">Convert</button>
+        </form>
+    
+    </center>
 
-    <div id="map"></div>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script>
-
-        function myFunc(vars) {
-            return vars
-        }
-
-        var map = L.map('map').setView([40.712776, -74.005974], 13); // Initial position and zoom level
-
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
-            maxZoom: 18,
-        }).addTo(map);
-
-        start_station = myFunc({{start_stations|tojson}})
-        stop_station = myFunc({{stop_stations|tojson}})
-        for (let i = 0; i < start_station.length; i++) {
-
-            coords = start_station[i]["coords"]
-            L.marker(coords).addTo(map)
-            .bindPopup('Latitude: coords[0], Longitude: coords[1]');  // Add the Other Information Here Like Station Name and Number of Bikes Available
-        } 
-
-
-    </script>
 </body>
 </html>

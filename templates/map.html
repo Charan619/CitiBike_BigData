@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Map Display</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        .map-container {
+            height: auto; /* adjusted for content below the map */
+            width: 49%; /* slightly less than half to fit side by side */
+            float: left; /* align side by side */
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #map1, #map2 {
+            height: 400px; /* Set fixed height for the map */
+        }
+        h2 {
+            text-align: center;
+            margin-top: 0;
+        }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        ul {
+            list-style-type: none; /* Removes bullet points from the list */
+            padding-left: 0; /* Removes padding */
+        }
+        li {
+            padding: 5px; /* Adds space around items */
+            border-bottom: 1px solid #ccc; /* Adds a line between items */
+        }
+    </style>
+</head>
+<body>
+    <div class="map-container">
+        <h2>Starting Location</h2>
+        <div id="map1"></div>
+        <ul id="startList"></ul> <!-- List for starting stations -->
+    </div>
+    <div class="map-container">
+        <h2>End Location</h2>
+        <div id="map2"></div>
+        <ul id="endList"></ul> <!-- List for ending stations -->
+    </div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        function myFunc(vars) {
+            return vars;
+        }
+
+        var svgIcon = L.divIcon({
+            className: 'svg-icon',
+            html: '<svg height="24" width="24"><circle cx="12" cy="12" r="10" fill="red" /></svg>',
+            iconSize: [24, 24],
+            iconAnchor: [12, 24],
+            popupAnchor: [0, -24]
+        });
+
+        var greenIcon = L.divIcon({
+            className: 'svg-icon',
+            html: '<svg height="24" width="24"><circle cx="12" cy="12" r="10" fill="green" /></svg>',
+            iconSize: [24, 24],
+            iconAnchor: [12, 24],
+            popupAnchor: [0, -24]
+        });
+
+        // Initialize the first map
+        var map1 = L.map('map1').setView({{start_location}}, 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+        }).addTo(map1);
+        L.marker({{start_location}}).addTo(map1).bindPopup("Start Location");
+
+        // Initialize the second map
+        var map2 = L.map('map2').setView({{end_location}}, 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: 'Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors',
+            maxZoom: 18,
+        }).addTo(map2);
+        L.marker({{end_location}}).addTo(map2).bindPopup("End Location");
+
+        // Example of adding different data to each map
+        start_station = myFunc({{start_stations|tojson}});
+        for (let i = 0; i < start_station.length; i++) {
+            coords = start_station[i]["coords"];
+            station_name = start_station[i]["StationName"];
+            console.log()
+            bikes_available = start_station[i]["num_bikes_available"]["num_bikes_available"];
+            popupstring = "Address: " + station_name + " , Number of Bikes Available: " + bikes_available.toString();
+            L.marker(coords , {icon: svgIcon}).addTo(map1).bindPopup(popupstring);
+
+            
+            if(bikes_available)
+            {
+                var listItem = document.createElement('li');
+                listItem.textContent =  '🚴' + station_name + ": " + bikes_available + " bikes available"
+                if(start_station[i]["priority"]  > 0) 
+                    listItem.textContent = '🚴' + station_name + ": " + bikes_available + " bikes available"  + " 🚩";
+                startList.appendChild(listItem);
+            }
+        }
+
+        stop_station = myFunc({{stop_stations|tojson}});
+        for (let i = 0; i < stop_station.length; i++) {
+            coords = stop_station[i]["coords"];
+            station_name = stop_station[i]["StationName"];
+            docks_available = stop_station[i]["num_docks_available"]["num_docks_available"];
+            popupstring = "Address: " + station_name + " , Number of Docks Available: " + docks_available.toString();
+            L.marker(coords , {icon: greenIcon}).addTo(map2).bindPopup(popupstring);
+            if(docks_available > 0)
+            {
+                var listItem = document.createElement('li');
+                listItem.textContent = '🚴' + station_name + ": " + docks_available + " docks available"  ;
+                if(stop_station[i]["priority"]  < 0) 
+                    listItem.textContent = '🚴' + station_name + ": " + docks_available + " docks available"  + " 🚩";
+                endList.appendChild(listItem);
+            }
+
+        }
+
+    </script>
+</body>
+</html>
