@@ -1,6 +1,11 @@
 # Bikenomics
 The “Bikenomic - NYC Citibike Optimization” project explores using live and historical Citibike data to improve bike-sharing efficiency in New York City. By analyzing station usage patterns, the study identifies high and low utilization stations based on pickup and drop-off trends across different times and days. The goal is to balance demand by encouraging users to walk slightly farther to less busy stations through incentives like discounts and surge pricing. The project employs a machine learning model using PySpark to predict station demand, aiding in dynamic bike redistribution. The technology stack includes Flask for the web server, MongoDB for data storage, OpenMaps for visualization, and geopy for geolocation. The project demonstrates that strategic user redirection and dynamic pricing can reduce idle bike times and improve user experience. Future work involves enhancing the machine learning models, integrating real-time data streams via Kafka, and scaling the solution to other cities.
 
+<img width="570" height="689" alt="image" src="https://github.com/user-attachments/assets/0e10ee2b-e289-4d1d-8fec-15dae5e5a221" />
+<img width="710" height="576" alt="image" src="https://github.com/user-attachments/assets/ec1b26e1-2090-424f-858b-e4ffdbe4c309" />
+
+
+
 ## Highlights
 🚲 Utilization of live and historical Citibike data to optimize bike availability.
 
@@ -15,6 +20,11 @@ The “Bikenomic - NYC Citibike Optimization” project explores using live and 
 📈 Data reveals ridership peaks in warmer months and high activity in Midtown Manhattan stations.
 
 🔮 Future plans include real-time data integration and expansion to other urban areas.
+
+
+<img width="767" height="839" alt="image" src="https://github.com/user-attachments/assets/2f9fc377-8fd2-4c86-9de4-6f8ee17337e8" />
+
+
 
 ## Key Insights
 
@@ -40,3 +50,5 @@ The dataset size (over 4GB for 2023 alone) and the continuous influx of real-tim
 The integration of Flask, MongoDB, OpenMaps, and geopy creates a user-friendly platform that visualizes station availability and offers multiple bike station options based on real-time data. This practical implementation bridges complex backend analytics with front-end usability, promoting user engagement and satisfaction while supporting operational objectives.
 
 ### Read the Citibike_balancer_Report.pdf for more detailed analysis
+
+
